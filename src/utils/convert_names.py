@@ -5,18 +5,17 @@ import pandas as pd
 
 # Read results and former name files
 results = pd.read_csv("data/raw/results.csv")
-location_map = pd.read_csv("data/raw/former_names.csv")
+names = pd.read_csv("data/raw/former_names.csv")
 
-# Mapping of former names to current
-mapping = dict(zip(results["former"], results["current"]))
+# Build mapping of former → current
+mapping = dict(zip(names["former"], names["current"]))
 
-# Normalise location function:
-    # Takes location and matches former name to current name
+# Normalise location function
 def normalise(country):
-    return location_map.get(country, country)
+    return mapping.get(country, country)
 
-# Normalise countries
+# Apply to location country field
 results["country"] = results["country"].apply(normalise)
 
-# Create CSV to save normalised team name results
+# Save cleaned dataset
 results.to_csv("data/processed/results_named.csv", index=False)
